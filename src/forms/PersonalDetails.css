@@ -1,0 +1,37 @@
+/* PersonalDetails.css */
+.personal-details-container {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    background-color: #f9f9f9;
+    text-align: center;
+  }
+  
+  .personal-details-container h2 {
+    margin-bottom: 20px;
+  }
+  
+  .personal-details-container input {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+  }
+  
+  .personal-details-container button {
+    padding: 10px 20px;
+    background-color: #61dafb;
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .personal-details-container button:hover {
+    background-color: #2186c4;
+  }
+  

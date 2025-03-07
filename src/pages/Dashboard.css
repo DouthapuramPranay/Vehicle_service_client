@@ -1,0 +1,24 @@
+/* Dashboard Styles */
+.dashboard {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background-color: #fff;
+    border-radius: 0.5rem;
+    box-shadow: 0 0 1rem rgba(0, 0, 0, 0.1);
+    text-align: center;
+    box-sizing: border-box;
+  }
+  
+  .dashboard h2 {
+    font-size: 2rem;
+    color: #333;
+    margin-bottom: 1rem;
+  }
+  
+  .dashboard p {
+    font-size: 1.2rem;
+    color: #666;
+    margin: 0.5rem 0;
+  }
+  
