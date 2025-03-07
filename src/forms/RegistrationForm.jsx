@@ -29,7 +29,7 @@ const RegistrationForm = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      await axios.post('http://localhost:3000/users', formData);
+      await axios.post('https://vehicle-service-management-server.onrender.com/users', formData);
       navigate('/login');
     } catch (error) {
       console.error('Error submitting form', error);
