@@ -44,8 +44,6 @@ const App = () => {
           {/* Catch-all Route */}
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
-        {/* Footer visible on all pages */}
-        <Footer />
       </AuthProvider>
     </Router>
   );
