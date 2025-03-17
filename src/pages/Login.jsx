@@ -22,7 +22,7 @@ const handleLogin = async (e) => {
     console.log('API Response:', userResponse.data);
 
     const user = userResponse.data[0];
-
+console.log('User:', user);
     if (!user) {
       setError('Username does not exist');
       return;
@@ -33,7 +33,7 @@ const handleLogin = async (e) => {
     console.log('Stored Password:', user.password);
 
     // Step 2: Validate the password (with trimming)
-    if (!user || user.password.trim() !== password.trim()) {
+    if (!user || user.password.trim() !== password.trim() || user.username.trim() !== username.trim()) {
       setError('Incorrect password');
       return;
     }
