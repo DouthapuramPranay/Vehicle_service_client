@@ -22,7 +22,15 @@ const App = () => {
         {/* Navbar visible on all pages */}
         <Navbar />
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route
+            path="/"
+            element={
+              <>
+                <Home />
+                <Footer /> {/* Footer only on Home page */}
+              </>
+            }
+          />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route
