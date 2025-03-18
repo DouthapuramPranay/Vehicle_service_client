@@ -21,7 +21,7 @@ const handleLogin = async (e) => {
     const userResponse = await axios.get(`https://vehicle-service-management-server.onrender.com/users`);
     console.log('API Response:', userResponse.data);
 
-    const user = userResponse.data[0];
+    const user = userResponse.data.find((user) => user.username === username && user.password === password);
 console.log('User:', user);
     if (!user) {
       setError('Username does not exist');
