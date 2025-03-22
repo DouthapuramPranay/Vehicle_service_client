@@ -1,52 +1,60 @@
-import React, { useState } from 'react';
-import axios from 'axios'; // Make sure to install axios if you haven't already
-import { AuthProvider, useAuth } from '../context/AuthContext.jsx';
-import { useNavigate } from 'react-router-dom';
-import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai'; // Import eye icons
-import './Login.css';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { useAuth } from "../context/AuthContext.jsx";
+import { useNavigate } from "react-router-dom";
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
+import "./Login.css";
 
 const Login = () => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false); // State for toggling password visibility
-  const [error, setError] = useState(null); // Add state for error handling
-  const { login } = useAuth();
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState(null); // For error messages
+  const { login } = useAuth(); // Authentication context
   const navigate = useNavigate();
 
-const handleLogin = async (e) => {
-  e.preventDefault();
-  setError(null);
-
-  try {
-    const userResponse = await axios.get(`https://vehicle-service-management-server.onrender.com/users`);
-    console.log('API Response:', userResponse.data);
-
-    const user = userResponse.data.find((user) => user.username === username && user.password === password);
-console.log('User:', user);
-    if (!user) {
-      setError('Username does not exist');
-      return;
+  // Redirect to dashboard if already logged in
+  useEffect(() => {
+    const storedUser = JSON.parse(localStorage.getItem("authUser"));
+    if (storedUser) {
+      navigate("/dashboard");
     }
+  }, [navigate]);
 
-    // Log the entered password and the stored password
-    console.log('Entered Password:', password);
-    console.log('Stored Password:', user.password);
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setError(null); // Clear previous errors
 
-    // Step 2: Validate the password (with trimming)
-    if (!user || user.password.trim() !== password.trim() || user.username.trim() !== username.trim()) {
-      setError('Incorrect password');
-      return;
+    try {
+      const response = await axios.get(
+        "https://vehicle-service-management-server.onrender.com/users"
+      );
+
+      // Ensure proper data exists
+      if (!response.data || !Array.isArray(response.data)) {
+        throw new Error("Unexpected response format");
+      }
+
+      const user = response.data.find(
+        (user) =>
+          user.username.trim().toLowerCase() === username.trim().toLowerCase() &&
+          user.password.trim() === password.trim()
+      );
+
+      if (!user) {
+        setError("Invalid username or password");
+        return;
+      }
+
+      // Save the authenticated user to localStorage
+      localStorage.setItem("authUser", JSON.stringify(user));
+      login(user);
+      navigate("/dashboard"); // Redirect after successful login
+    } catch (err) {
+      console.error("Login Error:", err);
+      setError("An error occurred. Please try again.");
     }
-
-    // Step 3: Login via AuthContext
-    login(user); // Pass the user data to context
-    navigate('/dashboard'); // Navigate to dashboard
-  } 
-  catch (error) {
-    console.error('Login Error:', error);
-    setError('An error occurred. Please try again.');
-  }
-};
+  };
 
   return (
     <div className="login-container">
@@ -67,21 +75,26 @@ console.log('User:', user);
           <label>Password:</label>
           <div className="password-container">
             <input
-              type={showPassword ? 'text' : 'password'}
+              type={showPassword ? "text" : "password"}
               placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
               className="login-input"
             />
-            <div className="icon" onClick={() => setShowPassword((prev) => !prev)}>
+            <div
+              className="icon"
+              onClick={() => setShowPassword((prev) => !prev)}
+            >
               {showPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
             </div>
           </div>
         </div>
-        <button type="submit" className="login-button">Login</button>
+        <button type="submit" className="login-button">
+          Login
+        </button>
       </form>
-      {error && <p className="error-message">{error}</p>} {/* Display error message */}
+      {error && <p className="error-message">{error}</p>}
     </div>
   );
 };

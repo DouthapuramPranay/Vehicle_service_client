@@ -1,6 +1,6 @@
 import React from 'react';
 import { AuthProvider, useAuth } from '../context/AuthContext.jsx';
-
+import './Dashboard.css';
 const Dashboard = () => {
   const { user } = useAuth();
 
