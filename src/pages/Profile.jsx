@@ -55,7 +55,8 @@ const Profile = () => {
     formData.append("image", file);
 
     try {
-      await axios.post("https://vehicle-service-management-server.onrender.com/users", formData, {
+      // Dedicated endpoint for image upload
+      await axios.post("https://vehicle-service-management-server.onrender.com/upload", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       alert("Profile image uploaded successfully!");
@@ -77,7 +78,6 @@ const Profile = () => {
     try {
       console.log("Deleting user:", user.id);
 
-      // Correct DELETE request with backticks
       await axios.delete(`https://vehicle-service-management-server.onrender.com/users/${user.id}`);
 
       alert("Profile deleted successfully!");
