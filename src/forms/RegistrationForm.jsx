@@ -3,7 +3,6 @@ import AddressDetails from "./AddressDetails";
 import LanguageDetails from "./LanguageDetails";
 import Credentials from "./Credentials";
 import PersonalDetails from "./PersonalDetails";
-
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
@@ -29,13 +28,9 @@ const RegistrationForm = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      // Send the form data to the backend
-      const response = await axios.post(
-        "https://vehicle-service-management-server.onrender.com/users",
-        formData
-      );
+      const response = await axios.post("http://localhost:8080/api/users/register", formData);
       console.log("User registered successfully:", response.data);
-      navigate("/login"); // Redirect to the login page after successful registration
+      navigate("/login");
     } catch (error) {
       console.error("Error submitting form:", error);
     }
@@ -44,45 +39,15 @@ const RegistrationForm = () => {
   const renderStep = () => {
     switch (step) {
       case 0:
-        return (
-          <PersonalDetails
-            formData={formData}
-            setFormData={setFormData}
-            nextStep={nextStep}
-          />
-        );
+        return <PersonalDetails formData={formData} setFormData={setFormData} nextStep={nextStep} />;
       case 1:
-        return (
-          <AddressDetails
-            formData={formData}
-            setFormData={setFormData}
-            nextStep={nextStep}
-          />
-        );
+        return <AddressDetails formData={formData} setFormData={setFormData} nextStep={nextStep} />;
       case 2:
-        return (
-          <LanguageDetails
-            formData={formData}
-            setFormData={setFormData}
-            nextStep={nextStep}
-          />
-        );
+        return <LanguageDetails formData={formData} setFormData={setFormData} nextStep={nextStep} />;
       case 3:
-        return (
-          <Credentials
-            formData={formData}
-            setFormData={setFormData}
-            handleSubmit={handleSubmit}
-          />
-        );
+        return <Credentials formData={formData} setFormData={setFormData} handleSubmit={handleSubmit} />;
       default:
-        return (
-          <PersonalDetails
-            formData={formData}
-            setFormData={setFormData}
-            nextStep={nextStep}
-          />
-        );
+        return <PersonalDetails formData={formData} setFormData={setFormData} nextStep={nextStep} />;
     }
   };
 

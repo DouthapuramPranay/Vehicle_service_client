@@ -6,10 +6,10 @@ import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import "./Login.css";
 
 const Login = () => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState(null); // For error messages
+  const [username, setUsername] = useState(""); // Username state
+  const [password, setPassword] = useState(""); // Password state
+  const [showPassword, setShowPassword] = useState(false); // Password visibility toggle
+  const [error, setError] = useState(null); // Error messages
   const { login } = useAuth(); // Authentication context
   const navigate = useNavigate();
 
@@ -22,37 +22,31 @@ const Login = () => {
   }, [navigate]);
 
   const handleLogin = async (e) => {
-    e.preventDefault();
+    e.preventDefault(); // Prevent default form submission behavior
     setError(null); // Clear previous errors
 
     try {
-      const response = await axios.get(
-        "https://vehicle-service-management-server.onrender.com/users"
-      );
+      const response = await axios.post("http://localhost:8080/api/users/login", {
+        username: username.trim().toLowerCase(),
+        password: password.trim(),
+      });
 
-      // Ensure proper data exists
-      if (!response.data || !Array.isArray(response.data)) {
-        throw new Error("Unexpected response format");
-      }
-
-      const user = response.data.find(
-        (user) =>
-          user.username.trim().toLowerCase() === username.trim().toLowerCase() &&
-          user.password.trim() === password.trim()
-      );
-
+      // If login is successful, save user to localStorage
+      const user = response.data; // Assuming API returns a single user object
       if (!user) {
         setError("Invalid username or password");
         return;
       }
 
-      // Save the authenticated user to localStorage
+      // Save authenticated user and redirect
       localStorage.setItem("authUser", JSON.stringify(user));
-      login(user);
-      navigate("/dashboard"); // Redirect after successful login
+      login(user); // Set user in authentication context
+      navigate("/dashboard"); // Redirect after login
     } catch (err) {
       console.error("Login Error:", err);
-      setError("An error occurred. Please try again.");
+      setError(
+        err.response?.data?.message || "An error occurred. Please try again."
+      );
     }
   };
 
