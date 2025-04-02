@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { useAuth } from "../context/AuthContext.jsx";
 import axios from "axios";
 import "./Profile.css";
 
@@ -7,28 +6,41 @@ const Profile = () => {
   const [user, setUser] = useState(null);
   const [username, setUsername] = useState("");
   const [isEditing, setIsEditing] = useState(false);
-  const { logout } = useAuth();
 
   useEffect(() => {
     const storedUser = JSON.parse(localStorage.getItem("authUser"));
-    if (!storedUser) return;
-    
-    setUser(storedUser);
-    setUsername(storedUser.username);
+    if (storedUser) {
+      setUser(storedUser);
+      setUsername(storedUser.username);
+    }
   }, []);
 
   const handleEdit = () => setIsEditing(!isEditing);
 
+  const handleSave = async () => {
+    try {
+      await axios.put(`http://localhost:8080/api/users/update/${user.id}`, { username });
+      alert("Profile updated successfully!");
+      setIsEditing(false);
+    } catch (error) {
+      console.error("Update Profile Error:", error);
+    }
+  };
   const handleDeleteProfile = async () => {
-    if (!user) return;
     if (!window.confirm("Are you sure you want to delete your profile?")) return;
     try {
-      await axios.delete(`http://localhost:8080/api/users/${user.id}`);
+      await axios.delete(`http://localhost:8080/api/users/delete/${user.id}`);
       alert("Profile deleted successfully!");
-      logout();
+      localStorage.removeItem("authUser");
+      window.location.reload();
     } catch (error) {
       console.error("Delete Profile Error:", error);
     }
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("authUser");
+    window.location.reload();
   };
 
   return (
@@ -45,13 +57,13 @@ const Profile = () => {
           username
         )}
       </p>
-      <button onClick={handleEdit} className="edit-button">
+      <button onClick={isEditing ? handleSave : handleEdit} className="edit-button">
         {isEditing ? "Save" : "Edit"}
       </button>
       <button onClick={handleDeleteProfile} className="delete-button">
         Delete Profile
       </button>
-      <button onClick={logout} className="logout-button">
+      <button onClick={handleLogout} className="logout-button">
         Logout
       </button>
     </div>
