@@ -34,10 +34,26 @@ const Profile = () => {
   return (
     <div className="profile-container">
       <h2>Profile</h2>
-      <p>{isEditing ? <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} /> : username}</p>
-      <button onClick={handleEdit}>{isEditing ? "Save" : "Edit"}</button>
-      <button onClick={handleDeleteProfile} className="delete-button">Delete Profile</button>
-      <button onClick={logout} className="logout-button">Logout</button>
+      <p>
+        {isEditing ? (
+          <input
+            type="text"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+          />
+        ) : (
+          username
+        )}
+      </p>
+      <button onClick={handleEdit} className="edit-button">
+        {isEditing ? "Save" : "Edit"}
+      </button>
+      <button onClick={handleDeleteProfile} className="delete-button">
+        Delete Profile
+      </button>
+      <button onClick={logout} className="logout-button">
+        Logout
+      </button>
     </div>
   );
 };
